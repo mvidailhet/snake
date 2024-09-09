@@ -11,6 +11,7 @@
     <div id="overlay">
       <h2 id="overlay-title">Snake</h2>
       <div id="overlay-score" class="hidden">Score: <span class="score">0</span></div>
+      <div id="overlay-highscore" class="hidden">Highscore!</div>
       <div class="overlay-buttons">
         <button id="overlay-start-button" onclick="startOrResumeGame()">Start Game</button>
         <button id="overlay-restart-button" class="hidden" onclick="restartGame()">Restart Game</button>
@@ -19,6 +20,7 @@
     <div id="info">
       <h1>Snake</h1>
       <p>Score: <span class="score">0</span></p>
+      <p>Highscore: <span id="highscore"></span></p>
     </div>
     <div id="container"></div>
   </body>

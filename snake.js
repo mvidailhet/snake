@@ -24,8 +24,10 @@ const snakeInitialValues = {
 const foodColor = "#ff0000";
 
 let score = 0;
+let highscore = 0;
 
 let ctx;
+const highscoreLocalStorageKey = "highscore";
 
 class Snake {
   constructor(body, direction, color) {
@@ -103,6 +105,8 @@ let overlayTitleElt;
 let overlayStartBtnElt;
 let overlayReStartBtnElt;
 let overlayScoreElt;
+let overlayHighscoreElt;
+let highscoreElt;
 let scoreElts = [];
 
 function refreshcanvas() {
@@ -166,6 +170,14 @@ function restartGame() {
 
 function gameOver() {
   isRunning = false;
+
+  if (isHighScore()) {
+    overlayHighscoreElt.classList.remove("hidden");
+    setHighScore();
+  } else {
+    overlayHighscoreElt.classList.add("hidden");
+  }
+
   overlayElt.classList.remove("hidden");
   overlayTitleElt.innerText = "Game Over";
   overlayStartBtnElt.classList.add("hidden");
@@ -194,18 +206,41 @@ function appendCanvasToContainer(canvas) {
   containerElt.appendChild(canvas);
 }
 
-function init() {
+function initHTMLElements() {
   overlayElt = document.getElementById("overlay");
   overlayTitleElt = document.getElementById("overlay-title");
   overlayStartBtnElt = document.getElementById("overlay-start-button");
   overlayReStartBtnElt = document.getElementById("overlay-restart-button");
   overlayScoreElt = document.getElementById("overlay-score");
   scoreElts = document.getElementsByClassName("score");
+  highscoreElt = document.getElementById("highscore");
+  overlayHighscoreElt = document.getElementById("overlay-highscore");
+}
 
+function init() {
+  initHTMLElements();
+
+  loadHighscore();
+
+  initCanvas();
+
+  refreshcanvas();
+}
+
+function initCanvas() {
   var canvas = createCanvas();
   appendCanvasToContainer(canvas);
   ctx = canvas.getContext("2d");
-  refreshcanvas();
+}
+
+function loadHighscore() {
+  const highscoreStr = localStorage.getItem(highscoreLocalStorageKey);
+  if (highscoreStr) {
+    highscore = parseInt(highscoreStr);
+  } else {
+    highscore = 0;
+  }
+  highscoreElt.innerText = highscore;
 }
 
 function drawFood() {
@@ -248,6 +283,16 @@ function increaseScore() {
   for (var i = 0; i < scoreElts.length; i++) {
     scoreElts[i].innerText = score;
   }
+}
+
+function isHighScore() {
+  return score > highscore;
+}
+
+function setHighScore() {
+  highscore = score;
+  highscoreElt.innerText = highscore;
+  localStorage.setItem(highscoreLocalStorageKey, highscore);
 }
 
 function generateRandomPosition() {
