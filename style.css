@@ -22,6 +22,12 @@ html, body {
   flex-direction: column;
 }
 
+.overlay-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
 #info {
   position: fixed;
   display: flex;

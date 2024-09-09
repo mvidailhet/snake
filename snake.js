@@ -6,6 +6,15 @@ const canvasDimensions = {
 const blocksize = 30;
 const refreshDelay = 100;
 
+const snakeInitialValues = {
+  body: [
+    [6, 4],
+    [5, 4],
+    [4, 4],
+  ],
+  direction: "right",
+};
+
 let ctx;
 
 class Snake {
@@ -55,14 +64,7 @@ class Snake {
   }
 }
 
-const snakey = new Snake(
-  [
-    [6, 4],
-    [5, 4],
-    [4, 4],
-  ],
-  "right"
-);
+let snakey = createSnake();
 
 var directionKeyCodes = {
   ArrowLeft: "left",
@@ -76,6 +78,7 @@ let isRunning = false;
 let overlayElt;
 let overlayTitleElt;
 let overlayStartBtnElt;
+let overlayReStartBtnElt;
 
 function refreshcanvas() {
   if (isRunning) {
@@ -104,7 +107,7 @@ document.onkeydown = function handlekeydown(e) {
   snakey.setdirection(directionKeyCodes[keyCodePressed]);
 };
 
-function startGame() {
+function startOrResumeGame() {
   isRunning = true;
   overlayElt.classList.add("hidden");
 }
@@ -114,6 +117,26 @@ function pauseGame() {
   overlayElt.classList.remove("hidden");
   overlayTitleElt.innerText = "Game Paused";
   overlayStartBtnElt.innerText = "Resume";
+  overlayReStartBtnElt.classList.remove("hidden");
+}
+
+function restartGame() {
+  snakey = createSnake();
+  startOrResumeGame();
+}
+
+function gameOver() {
+  isRunning = false;
+  overlayElt.classList.remove("hidden");
+  overlayTitleElt.innerText = "Game Over";
+  overlayReStartBtnElt.innerText = "Restart";
+}
+
+function createSnake() {
+  return new Snake(
+    [...snakeInitialValues.body],
+    snakeInitialValues.direction
+  );
 }
 
 function createCanvas() {
@@ -133,6 +156,7 @@ function init() {
   overlayElt = document.getElementById("overlay");
   overlayTitleElt = document.getElementById("overlay-title");
   overlayStartBtnElt = document.getElementById("overlay-start-button");
+  overlayReStartBtnElt = document.getElementById("overlay-restart-button");
 
   var canvas = createCanvas();
   appendCanvasToContainer(canvas);

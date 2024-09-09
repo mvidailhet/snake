@@ -10,7 +10,10 @@
   <body>
     <div id="overlay">
       <h2 id="overlay-title">Snake</h2>
-      <button id="overlay-start-button" onclick="startGame()">Start Game</button>
+      <div class="overlay-buttons">
+        <button id="overlay-start-button" onclick="startOrResumeGame()">Start Game</button>
+        <button id="overlay-restart-button" class="hidden" onclick="restartGame()">Restart Game</button>
+      </div>
     </div>
     <div id="info">
       <h1>Snake</h1>
