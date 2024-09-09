@@ -99,7 +99,7 @@ var directionKeyCodes = {
 };
 
 let isRunning = false;
-let gameState = "running";
+let gameState;
 
 let overlayElt;
 let overlayTitleElt;
@@ -107,6 +107,8 @@ let overlayStartBtnElt;
 let overlayReStartBtnElt;
 let overlayScoreElt;
 let overlayHighscoreElt;
+let overlayPressEnterTextElt;
+
 let highscoreElt;
 let scoreElts = [];
 
@@ -141,8 +143,16 @@ document.onkeydown = function handlekeydown(e) {
   var keyCodePressed = e.code;
   const allowedKeyCodes = Object.keys(directionKeyCodes);
   if (!allowedKeyCodes.includes(keyCodePressed)) {
+    console.log(keyCodePressed);
     if (keyCodePressed === "Space") {
       togglePauseGame();
+    }
+    if (keyCodePressed === "Enter") {
+      if (gameState === "over") {
+        restartGame();
+        return;
+      }
+      startOrResumeGame();
     }
     return;
   }
@@ -172,6 +182,7 @@ function togglePauseGame() {
   overlayStartBtnElt.innerText = "Resume";
   overlayReStartBtnElt.classList.remove("hidden");
   overlayScoreElt.classList.add("hidden");
+  overlayPressEnterTextElt.classList.add("hidden");
 }
 
 function restartGame() {
@@ -196,6 +207,7 @@ function gameOver() {
   overlayStartBtnElt.classList.add("hidden");
   overlayReStartBtnElt.classList.remove("hidden");
   overlayScoreElt.classList.remove("hidden");
+  overlayPressEnterTextElt.classList.remove("hidden");
 }
 
 function createSnake() {
@@ -225,9 +237,11 @@ function initHTMLElements() {
   overlayStartBtnElt = document.getElementById("overlay-start-button");
   overlayReStartBtnElt = document.getElementById("overlay-restart-button");
   overlayScoreElt = document.getElementById("overlay-score");
+  overlayHighscoreElt = document.getElementById("overlay-highscore");
+  overlayPressEnterTextElt = document.getElementById("overlay-press-enter-text");
+
   scoreElts = document.getElementsByClassName("score");
   highscoreElt = document.getElementById("highscore");
-  overlayHighscoreElt = document.getElementById("overlay-highscore");
 }
 
 function init() {
