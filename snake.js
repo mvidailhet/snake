@@ -6,6 +6,13 @@ const canvasDimensions = {
 const blocksize = 30;
 const refreshDelay = 100;
 
+const playableArea = {
+  width: canvasDimensions.width / blocksize,
+  height: canvasDimensions.height / blocksize,
+};
+
+console.log(playableArea);
+
 const snakeInitialValues = {
   body: [
     [6, 4],
@@ -50,6 +57,17 @@ class Snake {
       default:
         throw "invalid direction";
     }
+
+    if (
+      nextposition[0] < 0 ||
+      nextposition[0] >= playableArea.width ||
+      nextposition[1] < 0 ||
+      nextposition[1] >= playableArea.height
+    ) {
+      gameOver();
+      return;
+    }
+
     this.body.unshift(nextposition);
     this.body.pop();
   }
@@ -122,6 +140,7 @@ function pauseGame() {
 
 function restartGame() {
   snakey = createSnake();
+  overlayStartBtnElt.classList.remove("hidden");
   startOrResumeGame();
 }
 
@@ -129,14 +148,12 @@ function gameOver() {
   isRunning = false;
   overlayElt.classList.remove("hidden");
   overlayTitleElt.innerText = "Game Over";
-  overlayReStartBtnElt.innerText = "Restart";
+  overlayStartBtnElt.classList.add("hidden");
+  overlayReStartBtnElt.classList.remove("hidden");
 }
 
 function createSnake() {
-  return new Snake(
-    [...snakeInitialValues.body],
-    snakeInitialValues.direction
-  );
+  return new Snake([...snakeInitialValues.body], snakeInitialValues.direction);
 }
 
 function createCanvas() {
