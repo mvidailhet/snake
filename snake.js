@@ -73,12 +73,23 @@ class Snake {
   }
 
   setdirection(newdirection) {
-    var alloweddirections = Object.values(directionKeyCodes);
-    if (!alloweddirections.includes(newdirection)) {
-      throw "invalid direction";
-    } else {
-      this.direction = newdirection;
+    if (this.direction === "up" && newdirection === "down") {
+      return;
     }
+
+    if (this.direction === "down" && newdirection === "up") {
+      return;
+    }
+
+    if (this.direction === "left" && newdirection === "right") {
+      return;
+    }
+
+    if (this.direction === "right" && newdirection === "left") {
+      return;
+    }
+
+    this.direction = newdirection;
   }
 }
 
