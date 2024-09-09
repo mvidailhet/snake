@@ -99,6 +99,7 @@ var directionKeyCodes = {
 };
 
 let isRunning = false;
+let gameState = "running";
 
 let overlayElt;
 let overlayTitleElt;
@@ -141,7 +142,7 @@ document.onkeydown = function handlekeydown(e) {
   const allowedKeyCodes = Object.keys(directionKeyCodes);
   if (!allowedKeyCodes.includes(keyCodePressed)) {
     if (keyCodePressed === "Space") {
-      pauseGame();
+      togglePauseGame();
     }
     return;
   }
@@ -150,11 +151,22 @@ document.onkeydown = function handlekeydown(e) {
 
 function startOrResumeGame() {
   isRunning = true;
+  gameState = "running";
   overlayElt.classList.add("hidden");
 }
 
-function pauseGame() {
+function togglePauseGame() {
+  if (gameState === "over") {
+    return;
+  }
+
+  if (gameState === "paused") {
+    startOrResumeGame();
+    return;
+  }
+
   isRunning = false;
+  gameState = "paused";
   overlayElt.classList.remove("hidden");
   overlayTitleElt.innerText = "Game Paused";
   overlayStartBtnElt.innerText = "Resume";
@@ -170,6 +182,7 @@ function restartGame() {
 
 function gameOver() {
   isRunning = false;
+  gameState = "over";
 
   if (isHighScore()) {
     overlayHighscoreElt.classList.remove("hidden");
