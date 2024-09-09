@@ -117,6 +117,10 @@ function refreshcanvas() {
     ctx.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
     snakey.advance();
     snakey.draw();
+    if (isFoodEaten()) {
+      snakey.body.push([]);
+      foodPosition = generateRandomPosition();
+    }
     drawFood();
   }
   setTimeout(refreshcanvas, refreshDelay);
@@ -206,6 +210,10 @@ function drawFood() {
   ctx.fillStyle = foodColor;
   drawblock(ctx, foodPosition);
   ctx.restore();
+}
+
+function isFoodEaten() {
+  return snakey.body[0][0] === foodPosition[0] && snakey.body[0][1] === foodPosition[1];
 }
 
 function generateRandomPosition() {
