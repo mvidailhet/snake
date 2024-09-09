@@ -21,6 +21,8 @@ const snakeInitialValues = {
   color: "#00ff00",
 };
 
+const foodColor = "#ff0000";
+
 let ctx;
 
 class Snake {
@@ -94,6 +96,7 @@ class Snake {
 }
 
 let snakey = createSnake();
+let foodPosition = generateRandomPosition();
 
 var directionKeyCodes = {
   ArrowLeft: "left",
@@ -114,6 +117,7 @@ function refreshcanvas() {
     ctx.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
     snakey.advance();
     snakey.draw();
+    drawFood();
   }
   setTimeout(refreshcanvas, refreshDelay);
 }
@@ -165,7 +169,11 @@ function gameOver() {
 }
 
 function createSnake() {
-  return new Snake([...snakeInitialValues.body], snakeInitialValues.direction, snakeInitialValues.color);
+  return new Snake(
+    [...snakeInitialValues.body],
+    snakeInitialValues.direction,
+    snakeInitialValues.color
+  );
 }
 
 function createCanvas() {
@@ -191,6 +199,27 @@ function init() {
   appendCanvasToContainer(canvas);
   ctx = canvas.getContext("2d");
   refreshcanvas();
+}
+
+function drawFood() {
+  ctx.save();
+  ctx.fillStyle = foodColor;
+  drawblock(ctx, foodPosition);
+  ctx.restore();
+}
+
+function generateRandomPosition() {
+  const position = [
+    Math.floor(Math.random() * playableArea.width),
+    Math.floor(Math.random() * playableArea.height),
+  ];
+
+  for (var i = 0; i < snakey.body.length; i++) {
+    if (snakey.body[i][0] === position[0] && snakey.body[i][1] === position[1]) {
+      return generateRandomPosition();
+    }
+  }
+  return position;
 }
 
 window.onload = function () {
