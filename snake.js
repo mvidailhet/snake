@@ -20,19 +20,21 @@ const snakeInitialValues = {
     [4, 4],
   ],
   direction: "right",
+  color: "#00ff00",
 };
 
 let ctx;
 
 class Snake {
-  constructor(body, direction) {
+  constructor(body, direction, color) {
     this.body = body;
     this.direction = direction;
+    this.color = color;
   }
 
   draw() {
     ctx.save();
-    ctx.fillStyle = "#ff0000";
+    ctx.fillStyle = snakey.color;
     for (var i = 0; i < this.body.length; i++) {
       drawblock(ctx, this.body[i]);
     }
@@ -153,7 +155,7 @@ function gameOver() {
 }
 
 function createSnake() {
-  return new Snake([...snakeInitialValues.body], snakeInitialValues.direction);
+  return new Snake([...snakeInitialValues.body], snakeInitialValues.direction, snakeInitialValues.color);
 }
 
 function createCanvas() {
