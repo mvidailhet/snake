@@ -61,17 +61,6 @@ class Snake {
       default:
         throw "invalid direction";
     }
-
-    if (
-      nextposition[0] < 0 ||
-      nextposition[0] >= playableArea.width ||
-      nextposition[1] < 0 ||
-      nextposition[1] >= playableArea.height
-    ) {
-      gameOver();
-      return;
-    }
-
     this.body.unshift(nextposition);
     this.body.pop();
   }
@@ -118,15 +107,20 @@ let scoreElts = [];
 
 function refreshcanvas() {
   if (isRunning) {
-    ctx.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
     snakey.advance();
-    snakey.draw();
-    if (isFoodEaten()) {
-      snakey.body.push([]);
-      foodPosition = generateRandomPosition();
-      increaseScore();
+
+    if (isSnakeEatingItself() || snakeIsOutsidePlayableArea()) {
+      gameOver();
+    } else {
+      ctx.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
+      snakey.draw();
+      if (isFoodEaten()) {
+        snakey.body.push([]);
+        foodPosition = generateRandomPosition();
+        increaseScore();
+      }
+      drawFood();
     }
-    drawFood();
   }
   setTimeout(refreshcanvas, refreshDelay);
 }
@@ -222,7 +216,31 @@ function drawFood() {
 }
 
 function isFoodEaten() {
-  return snakey.body[0][0] === foodPosition[0] && snakey.body[0][1] === foodPosition[1];
+  const snakeHead = snakey.body[0];
+  return snakeHead[0] === foodPosition[0] && snakeHead[1] === foodPosition[1];
+}
+
+function snakeIsOutsidePlayableArea() {
+  const snakeHead = snakey.body[0];
+  return (
+    snakeHead[0] < 0 ||
+    snakeHead[0] >= playableArea.width ||
+    snakeHead[1] < 0 ||
+    snakeHead[1] >= playableArea.height
+  );
+}
+
+function isSnakeEatingItself() {
+  const snakeHead = snakey.body[0];
+  for (var i = 1; i < snakey.body.length; i++) {
+    if (
+      snakeHead[0] === snakey.body[i][0] &&
+      snakeHead[1] === snakey.body[i][1]
+    ) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function increaseScore() {
@@ -239,7 +257,10 @@ function generateRandomPosition() {
   ];
 
   for (var i = 0; i < snakey.body.length; i++) {
-    if (snakey.body[i][0] === position[0] && snakey.body[i][1] === position[1]) {
+    if (
+      snakey.body[i][0] === position[0] &&
+      snakey.body[i][1] === position[1]
+    ) {
       return generateRandomPosition();
     }
   }
