@@ -11,8 +11,6 @@ const playableArea = {
   height: canvasDimensions.height / blocksize,
 };
 
-console.log(playableArea);
-
 const snakeInitialValues = {
   body: [
     [6, 4],
@@ -113,6 +111,7 @@ function drawblock(ctx, position) {
   var x = position[0] * blocksize;
   var y = position[1] * blocksize;
   ctx.fillRect(x, y, blocksize, blocksize);
+  ctx.strokeRect(x, y, blocksize, blocksize);
 }
 
 document.onkeydown = function handlekeydown(e) {
