@@ -23,6 +23,8 @@ const snakeInitialValues = {
 
 const foodColor = "#ff0000";
 
+let score = 0;
+
 let ctx;
 
 class Snake {
@@ -111,6 +113,8 @@ let overlayElt;
 let overlayTitleElt;
 let overlayStartBtnElt;
 let overlayReStartBtnElt;
+let overlayScoreElt;
+let scoreElts = [];
 
 function refreshcanvas() {
   if (isRunning) {
@@ -120,6 +124,7 @@ function refreshcanvas() {
     if (isFoodEaten()) {
       snakey.body.push([]);
       foodPosition = generateRandomPosition();
+      increaseScore();
     }
     drawFood();
   }
@@ -156,6 +161,7 @@ function pauseGame() {
   overlayTitleElt.innerText = "Game Paused";
   overlayStartBtnElt.innerText = "Resume";
   overlayReStartBtnElt.classList.remove("hidden");
+  overlayScoreElt.classList.add("hidden");
 }
 
 function restartGame() {
@@ -170,6 +176,7 @@ function gameOver() {
   overlayTitleElt.innerText = "Game Over";
   overlayStartBtnElt.classList.add("hidden");
   overlayReStartBtnElt.classList.remove("hidden");
+  overlayScoreElt.classList.remove("hidden");
 }
 
 function createSnake() {
@@ -198,6 +205,8 @@ function init() {
   overlayTitleElt = document.getElementById("overlay-title");
   overlayStartBtnElt = document.getElementById("overlay-start-button");
   overlayReStartBtnElt = document.getElementById("overlay-restart-button");
+  overlayScoreElt = document.getElementById("overlay-score");
+  scoreElts = document.getElementsByClassName("score");
 
   var canvas = createCanvas();
   appendCanvasToContainer(canvas);
@@ -214,6 +223,13 @@ function drawFood() {
 
 function isFoodEaten() {
   return snakey.body[0][0] === foodPosition[0] && snakey.body[0][1] === foodPosition[1];
+}
+
+function increaseScore() {
+  score += 1;
+  for (var i = 0; i < scoreElts.length; i++) {
+    scoreElts[i].innerText = score;
+  }
 }
 
 function generateRandomPosition() {
